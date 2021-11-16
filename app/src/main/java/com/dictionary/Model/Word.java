@@ -1,13 +1,40 @@
 package com.dictionary.Model;
 
 public class Word {
-    public String English;
-    public String VietNamese;
-    public String Topic;
+    private String English;
+    private String VietNamese;
+    private String Topic;
 
-    public Word(String english, String vietNamese, String topic) {
+    public Word() {
+    }
+
+    /*public Word(String english, String vietNamese, String topic) {
         English = english;
         VietNamese = vietNamese;
+        Topic = topic;
+    }*/
+
+    public String getEnglish() {
+        return English;
+    }
+
+    public void setEnglish(String english) {
+        English = english;
+    }
+
+    public String getVietNamese() {
+        return VietNamese;
+    }
+
+    public void setVietNamese(String vietNamese) {
+        VietNamese = vietNamese;
+    }
+
+    public String getTopic() {
+        return Topic;
+    }
+
+    public void setTopic(String topic) {
         Topic = topic;
     }
 }

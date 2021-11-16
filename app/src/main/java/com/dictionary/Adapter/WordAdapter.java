@@ -74,10 +74,10 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> i
                 String strDes ="";
                 String strTopic="";
                 for(Word w: listWordOld){
-                    if(w.English == strName)
+                    if(w.getEnglish() == strName)
                     {
-                        strDes=w.VietNamese;
-                        strTopic=w.Topic;
+                        strDes=w.getVietNamese();
+                        strTopic=w.getTopic();
                     }
                 }
 
@@ -91,10 +91,10 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> i
     @Override
     public void onBindViewHolder(WordAdapter.StoryHolder holder, int position) {
         Word item = listWord.get(position);
-        holder.tv_Name.setText(item.English);
-        if(item.VietNamese.length() >100)
-            holder.tv_Description.setText(item.VietNamese.substring(0,100)+"...");
-        else holder.tv_Description.setText(item.VietNamese);
+        holder.tv_Name.setText(item.getEnglish());
+        if(item.getVietNamese().length() >100)
+            holder.tv_Description.setText(item.getVietNamese().substring(0,100)+"...");
+        else holder.tv_Description.setText(item.getVietNamese());
 
         holder.tv_Description.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
         //holder.tvName.setText(item.getName());
@@ -127,7 +127,7 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> i
                 else{
                     ArrayList<Word> list = new ArrayList<>();
                     for(Word w:listWordOld){
-                        if(w.English.toLowerCase().contains(strSearch.toLowerCase())){
+                        if(w.getEnglish().toLowerCase().contains(strSearch.toLowerCase())){
                             list.add(w);
                         }
                     }
@@ -181,7 +181,7 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> i
             public void onClick(View view) {
                 ArrayList<Word> list = new ArrayList<>();
                 for(Word w: listWordOld){
-                    if(w.Topic == strTopic)
+                    if(w.getTopic().toLowerCase().compareTo(strTopic.toLowerCase())==0)
                         list.add(w);
                 }
                 listWord=list;
