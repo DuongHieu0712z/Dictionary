@@ -1,33 +1,53 @@
 package com.dictionary.Model;
 
 public class Word {
-    private String English;
-    private String VietNamese;
+    private String EngKey;
+    private String EngMean;
+    private String VieKey;
+    private String VieMean;
     private String Topic;
 
     public Word() {
     }
 
-    /*public Word(String english, String vietNamese, String topic) {
-        English = english;
-        VietNamese = vietNamese;
+    public Word(String engKey, String engMean, String vieKey, String vieMean, String topic) {
+        EngKey = engKey;
+        EngMean = engMean;
+        VieKey = vieKey;
+        VieMean = vieMean;
         Topic = topic;
-    }*/
-
-    public String getEnglish() {
-        return English;
     }
 
-    public void setEnglish(String english) {
-        English = english;
+    public String getEngKey() {
+        return EngKey;
     }
 
-    public String getVietNamese() {
-        return VietNamese;
+    public void setEngKey(String engKey) {
+        EngKey = engKey;
     }
 
-    public void setVietNamese(String vietNamese) {
-        VietNamese = vietNamese;
+    public String getEngMean() {
+        return EngMean;
+    }
+
+    public void setEngMean(String engMean) {
+        EngMean = engMean;
+    }
+
+    public String getVieKey() {
+        return VieKey;
+    }
+
+    public void setVieKey(String vieKey) {
+        VieKey = vieKey;
+    }
+
+    public String getVieMean() {
+        return VieMean;
+    }
+
+    public void setVieMean(String vieMean) {
+        VieMean = vieMean;
     }
 
     public String getTopic() {

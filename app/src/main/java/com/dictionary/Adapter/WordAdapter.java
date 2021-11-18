@@ -2,6 +2,7 @@ package com.dictionary.Adapter;
 
 import static android.graphics.text.LineBreaker.JUSTIFICATION_MODE_INTER_WORD;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -25,6 +26,8 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dictionary.Database.SQLiteHelper;
+import com.dictionary.MainActivity;
 import com.dictionary.Model.Word;
 import com.dictionary.R;
 
@@ -33,15 +36,23 @@ import java.util.Locale;
 
 public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> implements Filterable {
     private ArrayList<Word> listWord;
-    private ArrayList<Word> listWordOld;
+    private ArrayList<Word> listWordOld; //on database
+    private ArrayList<Word> listWordLocal; //have been search
     private final Context mContext;
     private TextToSpeech mTTS;
 
 
+
     public WordAdapter(ArrayList<Word> listWord, Context mContext) {
-        this.listWord = listWord;
+
         this.mContext = mContext;
         this.listWordOld=listWord;
+
+        SQLiteHelper helper = new SQLiteHelper(mContext);
+        helper.openDB();
+
+        this.listWordLocal = helper.getAll();
+        this.listWord = listWordLocal;
         mTTS = new TextToSpeech(mContext, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {
@@ -59,6 +70,8 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> i
     }
 
 
+
+
     @Override
     public StoryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item__be_searched_word, parent, false);
@@ -71,38 +84,60 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> i
                 mTTS.speak(str,TextToSpeech.QUEUE_ADD, null);*/
                 TextView tvName = view.findViewById(R.id.tv_be_search_word_name);
                 String strName=tvName.getText().toString();
+                String strEngKey = strName.split("/")[0].toString();
+                String strVieKey = strName.split("/")[1].toString();
+                String strVieMean ="";
+                String strEngMean = "";
                 String strDes ="";
                 String strTopic="";
                 for(Word w: listWordOld){
-                    if(w.getEnglish() == strName)
+                    if(w.getEngKey().compareTo(strEngKey)==0&&w.getVieKey().compareTo(strVieKey)==0)
                     {
-                        strDes=w.getVietNamese();
-                        strTopic=w.getTopic();
+                        strEngMean=w.getEngMean().toString();
+                        strVieMean=w.getVieMean().toString();
+                        strTopic=w.getTopic().toString();
                     }
                 }
 
-                openDialogDetail(strName, strDes, strTopic);
+                openDialogDetail(strEngKey, strEngMean, strVieKey, strVieMean, strTopic);
+                SQLiteHelper helper = new SQLiteHelper(mContext);
+                helper.openDB();
+                Word w = new Word(strEngKey, strEngMean, strVieKey, strVieMean, strTopic);
+                if(helper.IsExist(w)== true){
+                    helper.update(w);
+                }
+                else{
+                    helper.insert(w);
+                }
+                listWordLocal = helper.getAll();
             }
         });
         return new StoryHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(WordAdapter.StoryHolder holder, int position) {
         Word item = listWord.get(position);
-        holder.tv_Name.setText(item.getEnglish());
-        if(item.getVietNamese().length() >100)
-            holder.tv_Description.setText(item.getVietNamese().substring(0,100)+"...");
-        else holder.tv_Description.setText(item.getVietNamese());
+        holder.tv_Name.setText(item.getEngKey().toString()+"/"+item.getVieKey());
+        try{
+            holder.tv_Description.setText((item.getEngMean().substring(0,50)).toString()+"..." +"\n"+
+                    item.getVieMean().substring(0,50).toString()+"...");
+        }
+        catch (Exception ex){
+            holder.tv_Description.setText(item.getEngMean().toString()+"..." +"\n"+
+                    item.getVieMean().toString()+"...");
+        }
 
         holder.tv_Description.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
-        //holder.tvName.setText(item.getName());
     }
 
     @Override
     public int getItemCount() {
+        if(listWord!=null)
         return listWord.size();
+        return 0;
     }
 
     public class StoryHolder extends RecyclerView.ViewHolder {
@@ -123,11 +158,13 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> i
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String strSearch = charSequence.toString();
                 if(strSearch.isEmpty())
-                    listWord=listWordOld;
+                    listWord=listWordLocal;
+                    //listWord=listWordOld;
                 else{
                     ArrayList<Word> list = new ArrayList<>();
                     for(Word w:listWordOld){
-                        if(w.getEnglish().toLowerCase().contains(strSearch.toLowerCase())){
+                        if(w.getEngKey().toLowerCase().contains(strSearch.toLowerCase())||
+                                w.getVieKey().toLowerCase().contains(strSearch.toLowerCase())){
                             list.add(w);
                         }
                     }
@@ -138,6 +175,7 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> i
                 return filterResults;
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 listWord=(ArrayList<Word>) filterResults.values;
@@ -146,7 +184,7 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> i
         };
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void openDialogDetail(String strName, String strDes, String strTopic){
+    private void openDialogDetail(String EngKey, String EngMean, String VieKey, String VieMean, String Topic){
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.floating_dialog);
@@ -163,16 +201,16 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> i
         TextView tvName = dialog.findViewById(R.id.tv_detail_name);
         TextView tvDes = dialog.findViewById(R.id.tv_detail_description);
 
-        tvName.setText(strName);
-        tvDes.setText(strDes);
-        tvSubName.setText(strTopic);
+        tvName.setText(EngKey+"/"+VieKey);
+        tvDes.setText(EngMean+"\n"+VieMean);
+        tvSubName.setText(Topic);
 
         tvDes.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
         tvName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TextView tv_name = view.findViewById(R.id.tv_detail_name);
-                String str= tv_name.getText().toString();
+                String str= tv_name.getText().toString().split("/")[0];
                 mTTS.speak(str,TextToSpeech.QUEUE_ADD, null);
             }
         });
@@ -181,7 +219,7 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> i
             public void onClick(View view) {
                 ArrayList<Word> list = new ArrayList<>();
                 for(Word w: listWordOld){
-                    if(w.getTopic().toLowerCase().compareTo(strTopic.toLowerCase())==0)
+                    if(w.getTopic().toLowerCase().compareTo(Topic.toLowerCase())==0)
                         list.add(w);
                 }
                 listWord=list;

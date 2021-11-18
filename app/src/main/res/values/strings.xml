@@ -3,4 +3,7 @@
     <string name="tv_title">Từ Điển</string>
     <string name="tv_sub_title">Ngành Công nghệ Thông tin</string>
     <string name="edt_search_hint">Nhập từ tiếng anh</string>
+    <string name="channel_name">Nhắc nhở</string>
+    <string name="channel_description">Nhắc nhở từ mới tự động hàng ngày</string>
+
 </resources>

@@ -115,6 +115,9 @@ public class SearchWordFragment extends Fragment {
 
             }
         });
+        /*Word word = new Word("English", "A Language popular", "Tiếng Ang", "Ngôn ngữ phổ biến", "Language");
+        datas.add(word);*/
+        //adapter.notifyDataSetChanged();
     }
 
     @Override
