@@ -122,11 +122,11 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> i
         Word item = listWord.get(position);
         holder.tv_Name.setText(item.getEngKey().toString()+"/"+item.getVieKey());
         try{
-            holder.tv_Description.setText((item.getEngMean().substring(0,50)).toString()+"..." +"\n"+
+            holder.tv_Description.setText((item.getEngMean().substring(0,50)).toString()+"..." +"\n\n"+
                     item.getVieMean().substring(0,50).toString()+"...");
         }
         catch (Exception ex){
-            holder.tv_Description.setText(item.getEngMean().toString()+"..." +"\n"+
+            holder.tv_Description.setText(item.getEngMean().toString()+"..." +"\n\n"+
                     item.getVieMean().toString()+"...");
         }
 
@@ -202,7 +202,7 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> i
         TextView tvDes = dialog.findViewById(R.id.tv_detail_description);
 
         tvName.setText(EngKey+"/"+VieKey);
-        tvDes.setText(EngMean+"\n"+VieMean);
+        tvDes.setText(EngMean+"\n\n"+VieMean);
         tvSubName.setText(Topic);
 
         tvDes.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);

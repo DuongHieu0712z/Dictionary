@@ -52,7 +52,8 @@
                 android:layoutDirection="rtl"
                 android:queryHint="@string/edt_search_hint"
                 android:layout_marginBottom="1.25dp"
-                android:queryBackground="@color/Transparent"/>
+                android:queryBackground="@color/Transparent"
+                />
         </LinearLayout>
         <ImageView
             android:layout_marginHorizontal="10dp"
