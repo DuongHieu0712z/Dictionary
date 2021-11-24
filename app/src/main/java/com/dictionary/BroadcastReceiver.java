@@ -2,6 +2,7 @@ package com.dictionary;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
@@ -24,15 +25,21 @@ public class BroadcastReceiver extends android.content.BroadcastReceiver {
             Random random = new Random();
             int index = random.nextInt(list.size());
 
+            Intent intent1 = new Intent(context, MainActivity.class);
+            PendingIntent p = PendingIntent.getActivity(context, 1, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
             Notification notification = new NotificationCompat.Builder(context, MyApplication.CHANNEL_ID)
                     .setContentTitle(list.get(index).getEngKey().toString()+"/"+list.get(index).getVieKey().toString())
                     .setContentText(list.get(index).getEngMean().toString()+"/"+list.get(index).getVieMean().toString())
                     .setSmallIcon(R.drawable.ic_baseline_speaker_notes_24)
+                    .setContentIntent(p)
                     .build();
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             if (notificationManager!=null){
                 notificationManager.notify(1, notification);
             }
+
         }
 
         /*NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "notification_id")

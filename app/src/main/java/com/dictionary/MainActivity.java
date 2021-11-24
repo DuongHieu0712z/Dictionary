@@ -46,12 +46,16 @@ public class MainActivity extends AppCompatActivity {
     public void setNotification(){
         ArrayList<Word> list = helper.getAll();
         if(!list.isEmpty()){
+            Intent intent1 = new Intent(this, MainActivity.class);
+            PendingIntent p = PendingIntent.getActivity(this, 1, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+
             Random random = new Random();
             int index = random.nextInt(list.size());
             Notification notification = new NotificationCompat.Builder(this, MyApplication.CHANNEL_ID)
                     .setContentTitle(list.get(index).getEngKey().toString()+"/"+list.get(index).getVieKey().toString())
                     .setContentText(list.get(index).getEngMean().toString()+"/"+list.get(index).getVieMean().toString())
                     .setSmallIcon(R.drawable.ic_baseline_speaker_notes_24)
+                    .setAutoCancel(true)
                     .build();
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             if (notificationManager!=null){
