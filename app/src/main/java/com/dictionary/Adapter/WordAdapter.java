@@ -2,12 +2,19 @@ package com.dictionary.Adapter;
 
 import static android.graphics.text.LineBreaker.JUSTIFICATION_MODE_INTER_WORD;
 
+import static com.dictionary.R.drawable.abc_ratingbar_indicator_material;
+import static com.dictionary.R.drawable.harddrive;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.text.LineBreaker;
+import android.net.Uri;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -20,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,8 +39,11 @@ import com.dictionary.MainActivity;
 import com.dictionary.Model.Word;
 import com.dictionary.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> implements Filterable {
     private ArrayList<Word> listWord;
@@ -227,8 +238,18 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.StoryHolder> i
                 dialog.dismiss();
             }
         });
-
+        int id = dialog.getContext().getResources().getIdentifier(EngKey.replaceAll("\\s+","").toLowerCase(Locale.ROOT), "drawable", dialog.getContext().getPackageName() );
+        File file = new File(getURLForResource(id));
+        if(id>0){
+            CircleImageView img_des = dialog.findViewById(R.id.circle_image);
+            img_des.setImageResource(id);
+            img_des.getLayoutParams().width = 300;
+            img_des.getLayoutParams().height = 300;
+        }
         dialog.show();
+    }
+    public String getURLForResource (int resourceId) {
+        return Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +resourceId).toString();
     }
 
 }

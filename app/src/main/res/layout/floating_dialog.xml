@@ -35,19 +35,37 @@
         android:layout_height="wrap_content"
         android:src="@drawable/line"
         android:layout_marginHorizontal="10dp"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="250dp">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:text="Mo ta tieng viet cho tu vung"
-        android:id="@+id/tv_detail_description"
-        android:fontFamily="monospace"
-        android:layout_marginHorizontal="30dp"
-        android:textColor="@color/white"
-        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ln_image"
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/circle_image"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="Mo ta tieng viet cho tu vung"
+                android:id="@+id/tv_detail_description"
+                android:fontFamily="monospace"
+                android:layout_marginHorizontal="30dp"
+                android:textColor="@color/white"
+                />
+        </LinearLayout>
+
     </ScrollView>
     <ImageView
         android:layout_width="match_parent"
